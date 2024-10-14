@@ -6,4 +6,4 @@ if [ "$INPUT_INSTALL_DEPENDENCIES" = "true" ]; then
 fi
 
 echo "Running eleventy"
-eleventy $INPUT_ARGS
+npx @11ty/eleventy $INPUT_ARGS
