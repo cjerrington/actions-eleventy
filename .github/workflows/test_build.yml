@@ -7,7 +7,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Build
-        uses: TartanLlama/actions-eleventy@master
+        uses: cjerrington/actions-eleventy@master
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v1.1.0
         env:
