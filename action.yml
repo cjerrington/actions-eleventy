@@ -1,4 +1,4 @@
-name: 'Eleventy Action'
+name: '11ty GH Pages Action'
 description: 'Build your Eleventy-based static website'
 author: 'Clayton Errington'
 inputs: 
