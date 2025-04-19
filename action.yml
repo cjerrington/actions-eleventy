@@ -1,7 +1,7 @@
 name: '11ty GH Pages Action'
 description: 'Build your Eleventy-based static website'
 author: 'Clayton Errington'
-inputs: 
+inputs:
   args:
     description: 'Arguments to pass to the Eleventy invocation'
     required: false
