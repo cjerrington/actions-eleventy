@@ -5,10 +5,18 @@ inputs:
   args:
     description: 'Arguments to pass to the Eleventy invocation'
     required: false
+    default: ''
   install_dependencies:
     description: 'If set to `true`, `npm install` will be run before Eleventy is invoked'
     required: false
-    default: false
+    default: 'false'
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: 'composite'
+  steps:
+    - name: Install dependencies
+      if: ${{ inputs.install_dependencies == 'true' }}
+      shell: bash
+      run: npm install
+    - name: Build with Eleventy
+      shell: bash
+      run: npx @11ty/eleventy ${{ inputs.args }}

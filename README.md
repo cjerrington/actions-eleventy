@@ -14,15 +14,15 @@ jobs:
   build_deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v4
       - name: Build
-        uses: cjerrington/actions-eleventy@master
+        uses: cjerrington/actions-eleventy@v2
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           publish_dir: _site
           publish_branch: gh-pages
-          github_token: ${{ secrets.DEPLOY_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 This action accepts a couple of optional inputs:
@@ -36,8 +36,46 @@ For example:
 
 ```yaml
 - name: Build
-  uses: cjerrington/actions-eleventy@v1.3
+  uses: cjerrington/actions-eleventy@v2
   with:
     args: '--output=_dist'
     install_dependencies: true
+```
+
+## Migrating from v1 to v2
+
+v2 replaces the Docker container action with a **composite action** that runs natively on the GitHub runner. This means faster execution (no Docker image build/pull) and simpler maintenance.
+
+### What changed
+
+| Aspect       | v1 (Docker)                   | v2 (Composite)                         |
+| ------------ | ----------------------------- | -------------------------------------- |
+| Runtime      | Custom Docker container       | Native on the runner                   |
+| Dependencies | Eleventy pre-installed globally | Resolved via `npx` (cached by npm)    |
+| `args` input | Optional, no default          | Optional, defaults to `''`             |
+| `install_dependencies` | Must be `true` or unset | Must be `'true'` (string) or `'false'` |
+
+### Steps to migrate
+
+1. Update the action reference from `@v1.x` to `@v2` (or `@master`).
+2. If you use `install_dependencies: true`, change it to `install_dependencies: 'true'` (string, since composite action inputs are always strings).
+3. Remove any workflow workarounds you may have added to handle the Docker container (e.g. custom `npm install` steps before the action — v2 handles this natively).
+4. The `DEPLOY_TOKEN` secret is no longer needed — use the built-in `GITHUB_TOKEN` instead (or keep your own if you prefer).
+
+**Before (v1):**
+```yaml
+- uses: actions/checkout@master
+- name: Build
+  uses: cjerrington/actions-eleventy@v1.3
+  with:
+    install_dependencies: true
+```
+
+**After (v2):**
+```yaml
+- uses: actions/checkout@v4
+- name: Build
+  uses: cjerrington/actions-eleventy@v2
+  with:
+    install_dependencies: 'true'
 ```
